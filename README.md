@@ -25,9 +25,15 @@ npm install
 4. **Create a .env file inside the backend folder**
 Add your credentials and environment variables.
 ```.env
-PORT=8000
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret_key
+PORT = 8000
+CONNECTION_URL = your_database_url
+JWT_SECRET= your_jwt_secret_key
+SENDER_EMAIL = your_email
+EMAIL_PASSWORD = your_email_password_or_app_password
+AWS_ACCESS_KEY = aws_access_key
+AWS_SECRET_ACCESS_KEY = aws_secret_access_key
+AWS_BUCKET_NAME = aws_bucket_name
+AWS_REGION = aws_region
 ```
 
 5. **Install dependencies for the frontend**
