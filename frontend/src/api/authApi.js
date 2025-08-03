@@ -15,3 +15,7 @@ export const sendVerificationEmail = async (data) => {
 export const verifyUser = async (data) => {
   return await API.post('/auth/verify-user', data);
 }
+
+export const checkAuth = async () => {
+  return await API.get('/auth/ckeck');
+}

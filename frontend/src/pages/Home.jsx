@@ -34,7 +34,7 @@ const Home = () => {
   return (
     <section className="max-w-7xl mx-auto px-6 sm:px-12 py-16">
       <div className="flex items-center justify-center space-x-4 mb-12">
-        <img src="logo.png" alt="Logo" className="w-48 h-auto" />
+        <img src="logo.png" alt="Logo" className="w-40 h-auto" />
         <p className="font-serif font-style: italic text-white-600 font-medium text-2xl ">
           Where Every Paw Has a Story!
         </p>

@@ -124,9 +124,20 @@ const verifyUser = async (req, res) => {
     }
 }
 
-const logout = (req, res) => {
-    res.clearCookie("token");
-    res.json({message: "Logged out successfully"});
+const check = (req, res) => {
+    try{
+        res.status(200).json({ user: req.user });
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
 }
 
-module.exports = {register, login, verifyCode, verifyUser, logout};
+const logout = (req, res) => {
+    res.clearCookie("token", {
+        httpOnly: true,
+        sameSite: "strict"
+    });
+    res.status(200).json({message: "Logged out successfully"});
+}
+
+module.exports = {register, login, verifyCode, verifyUser, check, logout};
