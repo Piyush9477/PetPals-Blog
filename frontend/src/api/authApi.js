@@ -17,5 +17,10 @@ export const verifyUser = async (data) => {
 }
 
 export const checkAuth = async () => {
-  return await API.get('/auth/ckeck');
+  try {
+    const res = await API.get('/auth/ckeck');
+    return res.data.user;
+  }catch(error){
+    return null;
+  }
 }
