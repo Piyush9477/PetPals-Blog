@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { loginUser } from "../api/authApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { useNavigate, Link } from "react-router-dom";
+import { AuthContext } from '../contexts/AuthContext';
 
 const Login = () => {
 
@@ -11,6 +12,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+    const {setIsLoggedIn} = useContext(AuthContext);
 
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|protonmail\.com|hotmail\.com|forexru\.com)$/;
@@ -31,6 +33,7 @@ const Login = () => {
         try {
             const res = await loginUser({ email, password });
             console.log('Login Success:', res.data);
+            setIsLoggedIn(true);
             toast.success("Login Successful");
             setTimeout(() => {
                 navigate("/");
