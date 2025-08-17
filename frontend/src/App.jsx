@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import VerifyUser from "./pages/VerifyUser";
 import Navbar from "./components/Navbar";
+import LogoutConfirm from "./pages/LogoutConfirm";
 import { AuthProvider } from "./contexts/AuthContext";
 
 const App = () => {
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/verify-user" element={<VerifyUser/>} />
+          <Route path="/logout-confirm" element={<LogoutConfirm/>} />
         </Routes>
       </AuthProvider>
     </>

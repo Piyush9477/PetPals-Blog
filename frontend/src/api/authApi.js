@@ -16,11 +16,18 @@ export const verifyUser = async (data) => {
   return await API.post('/auth/verify-user', data);
 }
 
-export const checkAuth = async () => {
+export const checkAuth = async (token) => {
   try {
-    const res = await API.get('/auth/ckeck');
+    const res = await API.get('/auth/check', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data.user;
-  }catch(error){
+  } catch (error) {
     return null;
   }
-}
+};
+ export const logoutUser = async () => {
+  return await API.post('/auth/logout');
+ }

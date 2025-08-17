@@ -12,7 +12,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
-    const {setIsLoggedIn} = useContext(AuthContext);
+    const {setIsLoggedIn, setUser} = useContext(AuthContext);
 
     const validateEmail = (email) => {
         const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail\.com|yahoo\.com|outlook\.com|protonmail\.com|hotmail\.com|forexru\.com)$/;
@@ -33,7 +33,9 @@ const Login = () => {
         try {
             const res = await loginUser({ email, password });
             console.log('Login Success:', res.data);
+            localStorage.setItem('authToken', res.data.user.token);
             setIsLoggedIn(true);
+            setUser(res.data.user);
             toast.success("Login Successful");
             setTimeout(() => {
                 navigate("/");
