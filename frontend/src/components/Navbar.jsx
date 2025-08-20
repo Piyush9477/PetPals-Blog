@@ -2,17 +2,26 @@ import { useState, useEffect, useContext } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import {checkAuth} from "../api/authApi";
 import { AuthContext } from '../contexts/AuthContext';
+import { notifyAndRedirect } from '../utils/notifyAndRedirect';
 
 const Navbar = () => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const { isLoggedIn } = useContext(AuthContext);
+  const { user, isLoggedIn } = useContext(AuthContext);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggleUserDropdown = () => setUserDropdownOpen(!userDropdownOpen);
 
-  
+  const handleCreatePost = () => {
+    if(!isLoggedIn) {
+      notifyAndRedirect("You need to log in to continue!", navigate);
+      return;
+    }
+    else{
+      navigate("/create-post");
+    }
+  };
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -32,7 +41,12 @@ const Navbar = () => {
             <a href="#" className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500">About</a>
           </li>
           <li>
-            <a href="#" className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500">Contact</a>
+            <a
+              onClick={handleCreatePost}
+              className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium cursor-pointer transition-colors"
+            >
+              Create Post
+            </a>
           </li>
         </ul>
 
@@ -50,7 +64,7 @@ const Navbar = () => {
               <span className="sr-only">Open user menu</span>
               <img
                 className="w-8 h-8 rounded-full"
-                src="/docs/images/people/profile-picture-3.jpg"
+                src={user.profilePic || "no-image-logo.png"}
                 alt="user photo"
               />
             </button>
@@ -59,8 +73,8 @@ const Navbar = () => {
                 className="absolute right-0 z-50 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
               >
                 <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">name@flowbite.com</span>
+                  <span className="block text-sm text-gray-900 dark:text-white">{user.name}</span>
+                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">{user.email}</span>
                 </div>
                 <ul className="py-2" aria-labelledby="user-menu-button">
                   <li>
@@ -77,14 +91,6 @@ const Navbar = () => {
                       className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
                       Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Earnings
                     </a>
                   </li>
                   <li>
