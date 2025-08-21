@@ -6,6 +6,7 @@ import VerifyUser from "./pages/VerifyUser";
 import Navbar from "./components/Navbar";
 import LogoutConfirm from "./pages/LogoutConfirm";
 import CreatePost from "./pages/CreatePost";
+import MyPosts from "./pages/MyPosts";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/verify-user" element={<VerifyUser/>} />
           <Route path="/logout-confirm" element={<LogoutConfirm/>} />
           <Route path="/create-post" element={<CreatePost/>} />
+          <Route path="/my-posts" element={<MyPosts/>} />
         </Routes>
       </AuthProvider>
     </>

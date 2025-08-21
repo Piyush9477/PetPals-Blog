@@ -101,6 +101,32 @@ const getPost = async (req, res) => {
     }
 }
 
+const getMyPosts = async (req, res) => {
+    try {
+        const {_id} = req.user;
+        const posts = await Post.find({createdBy: _id}).populate("createdBy", "name profilePic");
+        if(!posts || posts.length==0){
+            return res.status(404).json({message: "You have not created any posts yet."});
+        }
+        
+        const formattedPosts = posts.map(post => ({
+            title: post.title,
+            description: post.desc,
+            file: post.file,
+            createdBy: {
+                name: post.createdBy.name,
+                profilePic: post.createdBy.profilePic
+            },
+            createdAt: post.createdAt,
+            updatedAt: post.updatedAt,
+        }));
+
+        res.status(200).json({message: "Got your posts successfully", posts: formattedPosts});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
 const getAllPosts = async (req, res) => {
     try{
         const posts = await Post.find().populate("createdBy", "name profilePic");
@@ -126,4 +152,4 @@ const getAllPosts = async (req, res) => {
     }
 }
 
-module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts};
+module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts};

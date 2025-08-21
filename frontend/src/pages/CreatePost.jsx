@@ -1,12 +1,10 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createPost } from "../api/postsApi";
-import { AuthContext } from "../contexts/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreatePost = () => {
-    const { isLoggedIn, user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -16,23 +14,6 @@ const CreatePost = () => {
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [file, setFile] = useState(null);
-
-    useEffect(() => {
-        if(!isLoggedIn){
-            toast.error("You need to log in to create a post");
-            setTimeout(() => {
-                navigate("/login");
-            }, 1500);
-        }
-    }, [isLoggedIn, navigate]);
-
-    if (!isLoggedIn) {
-        return (
-        <div className="relative min-h-screen w-full flex justify-center items-center bg-gray-100">
-            <ToastContainer />
-        </div>
-        );
-    }
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -83,10 +64,10 @@ const CreatePost = () => {
     }
 
     return (
-       <div className="relative min-h-screen w-full overflow-hidden bg-gray-100 py-10 flex flex-col items-center text-gray-900">
+       <div className="relative min-h-screen w-full overflow-hidden py-10 flex flex-col items-center text-gray-900">
         <ToastContainer />
         <form
-            className="bg-white text-gray-900 rounded-lg shadow-md w-full max-w-lg px-8 py-6 flex flex-col gap-5"
+            className="text-gray-900 rounded-lg shadow-md w-full max-w-lg px-8 py-6 flex flex-col gap-5"
             onSubmit={handleSubmit}
             encType="multipart/form-data"
         >

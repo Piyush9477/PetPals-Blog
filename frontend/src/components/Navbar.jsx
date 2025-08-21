@@ -23,30 +23,48 @@ const Navbar = () => {
     }
   };
 
+  const handleMyPost = () => {
+    if(!isLoggedIn) {
+      notifyAndRedirect("You need to log in to view your posts!", navigate);
+      return;
+    }
+    else{
+      navigate("/my-posts");
+    }
+  };
+
   return (
-    <nav className="bg-white border-gray-200 dark:bg-gray-900">
+    <nav >
       <div className="max-w-screen-xl flex items-center justify-between mx-auto p-4">
         {/* Logo */}
         <a href="/" className="flex items-center space-x-3">
-          <img src="logo.png" className="h-8" alt="Logo" />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">PetPals Blog</span>
+          <img src="logo.png" className="h-12" alt="Logo" />
+          <span className="self-center text-2xl font-semibold whitespace-nowrap ">PetPals Blog</span>
         </a>
 
         {/* Navbar Links */}
-        <ul className="flex font-medium space-x-8">
+        <ul className="flex font-medium space-x-10">
           <li>
-            <a href="/" className="text-blue-700 dark:text-blue-500" aria-current="page">Home</a>
-          </li>
-          <li>
-            <a href="#" className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500">About</a>
+            <a href="/" className="text-blue-700 dark:text-blue-500 text-xl" aria-current="page">Home</a>
           </li>
           <li>
             <a
               onClick={handleCreatePost}
-              className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium cursor-pointer transition-colors"
+              className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium cursor-pointer transition-colors text-xl"
             >
               Create Post
             </a>
+          </li>
+          <li>
+            <a
+              onClick={handleMyPost}
+              className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium cursor-pointer transition-colors text-xl"
+            >
+              My Posts
+            </a>
+          </li>
+          <li>
+            <a href="#" className="text-gray-900 hover:text-blue-700 dark:text-white dark:hover:text-blue-500 text-xl">About</a>
           </li>
         </ul>
 
