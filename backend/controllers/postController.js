@@ -110,6 +110,7 @@ const getMyPosts = async (req, res) => {
         }
         
         const formattedPosts = posts.map(post => ({
+            id: post._id,
             title: post.title,
             description: post.desc,
             file: post.file,

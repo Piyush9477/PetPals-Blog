@@ -11,3 +11,7 @@ export const createPost = async (data) => {
 export const myPosts = async () => {
     return await API.get('/post/my-posts/get');
 }
+
+export const editPost = async (data, id) => {
+    return await API.put(`/post/update/${id}`, data);
+}

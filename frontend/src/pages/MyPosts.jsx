@@ -17,8 +17,8 @@ const MyPosts = () => {
                     description: post.description,
                     file: post.file,
                     author: {
-                    name:post.createdBy.name,
-                    avatar: post.createdBy.profilePic
+                        name:post.createdBy.name,
+                        avatar: post.createdBy.profilePic
                     },
                     createdAt: post.createdAt,
                     updatedAt: post.updatedAt,
@@ -32,6 +32,10 @@ const MyPosts = () => {
 
         fetchMyPosts();
     }, []);
+
+    const handleEdit = (post) => {
+        navigate('/edit-post', {state: {title: post.title, description: post.description, file: post.file, id: post._id}});
+    }
 
     return(
         <section className="max-w-7xl mx-auto px-6 sm:px-12 py-16">
@@ -60,25 +64,31 @@ const MyPosts = () => {
                             <p className="mt-2 text-gray-600 text-sm flex-grow max-h-24 overflow-y-auto pr-2 custom-scrollbar">
                                 {post.description}
                             </p>
-
-                            <div className="mt-6 flex items-center space-x-4">
-                                {post.author.avatar ? (
-                                    <img
-                                        className="h-10 w-10 rounded-full object-cover"
-                                        src={post.author.avatar}
-                                        alt={`${post.author.name} avatar`}
-                                        loading="lazy"
-                                    />
-                                ) : (
-                                    <img
-                                        className="h-10 w-10 rounded-full object-cover"
-                                        src="no-profile-logo.png"
-                                        loading="lazy"
-                                    />
-                                )}
-                                <div className="text-sm">
-                                    <p className="font-semibold text-gray-900">{post.author.name}</p>  
+                            <div className="mt-6 flex items-center justify-between">
+                                {/* Profile Section */}
+                                <div className="flex items-center space-x-4">
+                                    {post.author.avatar ? (
+                                        <img
+                                            className="h-10 w-10 rounded-full object-cover"
+                                            src={post.author.avatar}
+                                            alt={`${post.author.name} avatar`}
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <img
+                                            className="h-10 w-10 rounded-full object-cover"
+                                            src="no-profile-logo.png"
+                                            loading="lazy"
+                                        />
+                                    )}
+                                    <div className="text-sm">
+                                        <p className="font-semibold text-gray-900">{post.author.name}</p>  
+                                    </div>
                                 </div>
+                                {/* Edit button */}
+                                <button onClick={() => handleEdit(post)} className="button">
+                                    Edit
+                                </button>
                             </div>
                         </div>
                     </article>
