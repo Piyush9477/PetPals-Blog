@@ -11,11 +11,6 @@ const EditPost = () => {
     // Extract initial data from navigation state
     const { title: initialTitle = "", description: initialDesc = "", file: initialFile = null, id } = location.state || {};
 
-    console.log("Initial Title:", initialTitle);
-    console.log("Initial Description:", initialDesc);
-    console.log("Initial File:", initialFile);
-    console.log("Post ID:", id);
-
     // Form state
     const [formData, setFormData] = useState({
         title: initialTitle,

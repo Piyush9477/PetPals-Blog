@@ -13,6 +13,7 @@ const MyPosts = () => {
                 const response = await myPosts();
 
                 const formattedPosts = response.data.posts.map(post => ({
+                    id: post.id,
                     title: post.title,
                     description: post.description,
                     file: post.file,
@@ -34,7 +35,7 @@ const MyPosts = () => {
     }, []);
 
     const handleEdit = (post) => {
-        navigate('/edit-post', {state: {title: post.title, description: post.description, file: post.file, id: post._id}});
+        navigate('/edit-post', {state: {title: post.title, description: post.description, file: post.file, id: post.id}});
     }
 
     return(
