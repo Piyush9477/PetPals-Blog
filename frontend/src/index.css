@@ -55,10 +55,10 @@ button {
   color: #ffffff;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background 0.25s;
 }
 button:hover {
-  border-color: #ff9900;
+  background: #22222235;
 }
 button:focus,
 button:focus-visible {

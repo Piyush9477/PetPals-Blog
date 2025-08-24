@@ -20,7 +20,7 @@ const LogoutConfirm = () => {
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(36, 36, 36, 0.85)", // matches your dark bg #242424 with opacity
+        backgroundColor: "#fffdf285", 
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -33,11 +33,11 @@ const LogoutConfirm = () => {
           handleLogout();
         }}
         style={{
-          backgroundColor: "#1a1a1a", // matches your button bg color
+          backgroundColor: "#1a1a1a", 
           padding: "2rem",
           borderRadius: "12px",
           border: "1px solid transparent",
-          color: "rgba(255,255,255,0.87)", // matches text color in :root
+          color: "rgba(255,255,255,0.87)", 
           fontFamily:
             "system-ui, Avenir, Helvetica, Arial, sans-serif",
           textAlign: "center",
@@ -62,7 +62,7 @@ const LogoutConfirm = () => {
               borderRadius: "8px",
               fontFamily: "inherit",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.borderColor = "#646cff")}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = "#00ffff")}
             onMouseOut={(e) => (e.currentTarget.style.borderColor = "transparent")}
           >
             Cancel
@@ -76,11 +76,11 @@ const LogoutConfirm = () => {
               fontWeight: 500,
               cursor: "pointer",
               transition: "border-color 0.25s",
-              color: "#646cff",
+              color: "#ff4c4c",
               borderRadius: "8px",
               fontFamily: "inherit",
             }}
-            onMouseOver={(e) => (e.currentTarget.style.borderColor = "#535bf2")}
+            onMouseOver={(e) => (e.currentTarget.style.borderColor = "#ff4c4c")}
             onMouseOut={(e) => (e.currentTarget.style.borderColor = "transparent")}
           >
             Logout
