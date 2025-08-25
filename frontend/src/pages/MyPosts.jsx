@@ -38,6 +38,10 @@ const MyPosts = () => {
         navigate('/edit-post', {state: {title: post.title, description: post.description, file: post.file, id: post.id}});
     }
 
+    const handelDelete = (id) => {
+        navigate('/delete-confirm', {state: {id}});
+    }
+
     return(
         <section className="max-w-7xl mx-auto px-6 sm:px-12 py-16">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -86,10 +90,16 @@ const MyPosts = () => {
                                         <p className="font-semibold text-gray-900">{post.author.name}</p>  
                                     </div>
                                 </div>
-                                {/* Edit button */}
-                                <button onClick={() => handleEdit(post)} className="button">
-                                    Edit
-                                </button>
+                                <div className="space-x-2">
+                                    {/* Edit button */}
+                                    <button onClick={() => handleEdit(post)} className="button">
+                                        Edit
+                                    </button>
+                                    {/* Delete button */}
+                                    <button onClick={() => handelDelete(post.id)} className="button">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </article>
