@@ -28,6 +28,11 @@ export const checkAuth = async (token) => {
     return null;
   }
 };
- export const logoutUser = async () => {
+
+export const logoutUser = async () => {
   return await API.post('/auth/logout');
- }
+}
+
+export const getProfile = async () => {
+  return await API.get('/auth/profile');
+}

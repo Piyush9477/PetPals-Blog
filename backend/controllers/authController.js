@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const Post = require("../models/Post");
 const {jwtsecret} = require("../config/keys");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
@@ -142,4 +143,16 @@ const logout = (req, res) => {
     res.status(200).json({message: "Logged out successfully"});
 }
 
-module.exports = {register, login, verifyCode, verifyUser, check, logout};
+const profile = async (req, res) => {
+    try{
+        const postCount = await Post.countDocuments({createdBy: req.user._id});
+        return res.status(200).json({
+            user: req.user,
+            postsCount: postCount
+        });
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {register, login, verifyCode, verifyUser, check, logout, profile};
