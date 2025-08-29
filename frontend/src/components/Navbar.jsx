@@ -73,15 +73,15 @@ const Navbar = () => {
           <div className="relative">
             <button
               type="button"
-              className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              id="user-menu-button"
+              className="p-0 border-0 rounded-full bg-transparent focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              id="user-menu-button rounded-full"
               aria-expanded={userDropdownOpen}
               onClick={toggleUserDropdown}
               aria-haspopup="true"
             >
               <span className="sr-only">Open user menu</span>
               <img
-                className="w-8 h-8 rounded-full"
+                className="w-12 h-12 rounded-full object-cover"
                 src={user.profilePic || "no-image-logo.png"}
                 alt="user photo"
               />

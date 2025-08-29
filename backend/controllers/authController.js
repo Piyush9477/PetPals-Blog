@@ -155,4 +155,34 @@ const profile = async (req, res) => {
     }
 }
 
-module.exports = {register, login, verifyCode, verifyUser, check, logout, profile};
+const editProfile = async (req, res) => {
+    try{
+        const {name, profilePic} = req.body;
+        const newProfilePic = req.file?.location;
+
+        const user = await User.findById(req.user._id);
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        if(newProfilePic && user.profilePic) {
+            const oldKey = user.profilePic.split("/").pop();
+            const deleteParams = {
+                Bucket: awsBucketName,
+                Key: oldKey
+            };
+            await s3.send(new DeleteObjectCommand(deleteParams));
+        }
+
+        user.name = name || user.name;
+        user.profilePic = newProfilePic || user.profilePic;
+
+        await user.save();
+
+        res.status(201).json({message: "Profile updated successfully", user: user});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {register, login, verifyCode, verifyUser, check, logout, profile, editProfile};
