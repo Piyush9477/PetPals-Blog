@@ -9,6 +9,7 @@ import CreatePost from "./pages/CreatePost";
 import MyPosts from "./pages/MyPosts";
 import EditPost from "./pages/EditPost";
 import DeleteConfirm from "./pages/DeleteConfirm";
+import Dashboard from "./pages/Dashboard";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/my-posts" element={<MyPosts/>} />
           <Route path="/edit-post" element={<EditPost/>} />
           <Route path="/delete-confirm" element={<DeleteConfirm/>} />
+          <Route path="/dashboard" element={<Dashboard/>} />
         </Routes>
       </AuthProvider>
     </>
