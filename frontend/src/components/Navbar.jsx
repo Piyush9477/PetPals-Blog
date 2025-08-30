@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import {checkAuth} from "../api/authApi";
 import { AuthContext } from '../contexts/AuthContext';
@@ -7,11 +7,25 @@ import { notifyAndRedirect } from '../utils/notifyAndRedirect';
 const Navbar = () => {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const { user, isLoggedIn } = useContext(AuthContext);
+  const dropdownRef = useRef(null);
 
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggleUserDropdown = () => setUserDropdownOpen(!userDropdownOpen);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userDropdownOpen && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userDropdownOpen]);
+
 
   const handleCreatePost = () => {
     if(!isLoggedIn) {
@@ -70,10 +84,10 @@ const Navbar = () => {
 
         { isLoggedIn ? (
           // Profile Dropdown
-          <div className="relative">
+          <div className="relative" ref={dropdownRef}>
             <button
               type="button"
-              className="p-0 border-0 rounded-full bg-transparent focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+              className="avatar-btn rounded-full focus:border-blue-500 focus:ring-2 focus:ring-blue-300"
               id="user-menu-button rounded-full"
               aria-expanded={userDropdownOpen}
               onClick={toggleUserDropdown}
@@ -81,7 +95,7 @@ const Navbar = () => {
             >
               <span className="sr-only">Open user menu</span>
               <img
-                className="w-12 h-12 rounded-full object-cover"
+                className="w-14 h-14 rounded-full object-cover"
                 src={user.profilePic || "no-image-logo.png"}
                 alt="user photo"
               />

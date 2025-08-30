@@ -91,3 +91,9 @@ button:focus-visible {
   background-color: #60a5fa; /* Tailwind blue-400 */
   border-radius: 6px;
 }
+
+.avatar-btn {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
