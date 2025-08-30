@@ -6,6 +6,8 @@ const {jwtsecret} = require("../config/keys");
 const sendEmail = require("../utils/sendEmail");
 const crypto = require("crypto");
 const {generateCode} = require("../utils/generateCode");
+const {s3, awsBucketName} = require("../middlewares/s3Upload");
+const {DeleteObjectCommand} = require("@aws-sdk/client-s3");
 
 const register = async (req, res) => {
     const {name, email, password, role} = req.body;

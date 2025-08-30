@@ -36,3 +36,7 @@ export const logoutUser = async () => {
 export const getProfile = async () => {
   return await API.get('/auth/profile');
 }
+
+export const editProfile = async (data) => {
+  return await API.put('/auth/edit-profile', data);
+}

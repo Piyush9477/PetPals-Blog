@@ -34,6 +34,10 @@ const Dashboard = () => {
         fetchProfile();
     }, []);
 
+    const handleEdit = (user) => {
+        navigate('/edit-profile', {state: {name: userData.name, file: userData.profilePic}});
+    }
+
     return (
         <div className="relative min-h-screen w-full overflow-hidden py-10 flex flex-col items-center text-gray-900">
             <ToastContainer />
@@ -45,6 +49,10 @@ const Dashboard = () => {
                 <p><strong>Email:</strong> {userData.email}</p>
                 <p><strong>Role:</strong> {userData.role}</p>
                 <p><strong>Posts Count:</strong> {userData.postsCount}</p>
+                {/* Edit button */}
+                <button onClick={() => handleEdit(userData)} className="button">
+                    Edit Profile
+                </button>
             </div>
         </div>
     );

@@ -95,7 +95,7 @@ const Navbar = () => {
             >
               <span className="sr-only">Open user menu</span>
               <img
-                className="w-14 h-14 rounded-full object-cover"
+                className="h-16 w-auto rounded-full object-cover"
                 src={user.profilePic || "no-image-logo.png"}
                 alt="user photo"
               />
