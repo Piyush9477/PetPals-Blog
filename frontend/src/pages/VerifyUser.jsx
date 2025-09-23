@@ -9,7 +9,7 @@ const VerifyUser = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const email = location.state?.email;
-    const sendOtpCalled = useRef(false); //{only for development, not for production}
+    const sendOtpCalled = useRef(false); 
 
     useEffect(() => {
         const sendOTP = async () => {
@@ -23,7 +23,7 @@ const VerifyUser = () => {
         };
 
         if (email && !sendOtpCalled.current) {
-            sendOtpCalled.current = true; //mark as sent. {only for development, not for production}
+            sendOtpCalled.current = true; 
             sendOTP();
         }
 

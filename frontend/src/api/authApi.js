@@ -1,3 +1,4 @@
+import { data } from 'react-router-dom';
 import API from './axios';
 
 export const loginUser = async (data) => {
@@ -14,7 +15,15 @@ export const sendVerificationEmail = async (data) => {
 
 export const verifyUser = async (data) => {
   return await API.post('/auth/verify-user', data);
-}
+};
+
+export const sendForgotPasswordCode = async (data) => {
+  return await API.post('/auth/send-forgot-password-code', data);
+};
+
+export const setNewPassword = async (data) => {
+  return await API.post('/auth/set-new-password', data);
+};
 
 export const checkAuth = async (token) => {
   try {

@@ -187,4 +187,56 @@ const editProfile = async (req, res) => {
     }
 }
 
-module.exports = {register, login, verifyCode, verifyUser, check, logout, profile, editProfile};
+const sendForgotPasswordCode = async (req, res) => {
+    try{
+        const {email} = req.body;
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        const code = generateCode();
+
+        user.forgotPasswordCode = code;
+        await user.save();
+
+        //send email
+        await sendEmail({
+            emailTo: user.email,
+            subject: "Forgot password code",
+            code,
+            content: "set up a new password for your account"
+        });
+
+        res.status(200).json({message: "Forgot password code sent successfully"});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+const setNewPassword = async (req, res) => {
+    try{
+        const {email, code, newPassword} = req.body;
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        if(user.forgotPasswordCode !== code){
+            return res.status(400).json({message: "Incorrect code"});
+        }
+
+        const newHashedPassword = await bcrypt.hash(newPassword, 10);
+        user.forgotPasswordCode = null;
+        user.password = newHashedPassword;
+        await user.save();
+
+        res.status(200).json({message: "Password updated successfully"});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {register, login, verifyCode, verifyUser, check, logout, profile, editProfile, sendForgotPasswordCode, setNewPassword};
