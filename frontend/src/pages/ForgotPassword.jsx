@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ForgotPassword = () => {
     const [OTP, setOTP] = useState('');
-    const [newPassword, setNewPassword] = useState('');
+    const [newPassword, setNewPasswordMethod] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ const ForgotPassword = () => {
         navigate(-1); //navigate to previous page
     };
 
-    const handleSybmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
@@ -85,14 +85,14 @@ const ForgotPassword = () => {
                             id="password"
                             type={showPassword ? "text" : "password"}
                             value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            onChange={(e) => setNewPasswordMethod(e.target.value)}
                             placeholder="Enter new password"
                             className="w-full p-2 border border-gray-300 rounded mb-4 text-gray-800"
                         />
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-0 top-6 text-gray-500"
+                            className="absolute right-0 top-0 text-gray-500"
                         >
                             {showPassword ? (
                                 <EyeSlashIcon className="h-5 w-5" />

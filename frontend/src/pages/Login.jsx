@@ -53,6 +53,19 @@ const Login = () => {
             console.error('Login Failed:', err.response?.data || err.message);
         }
     };
+
+    const handleForgotPassword = async (e) => {
+        e.preventDefault();
+        if(!email) {
+            toast.error("Email is required.");
+            return;
+        }
+        try{
+            navigate("/forgot-password", { state: { email } });
+        }catch(err){
+           console.error('Navigation to Forgot password page failed:', err.response?.data || err.message); 
+        }
+    }
     return (
         <div className="relative min-h-screen w-full overflow-hidden">
             <ToastContainer />
@@ -107,6 +120,14 @@ const Login = () => {
                             )}
                         </button>
                     </div>
+                    
+                    <button 
+                        type="button" 
+                        onClick={handleForgotPassword} 
+                        className="forgot-password-button"
+                    >
+                        Forgot Password?
+                    </button>
 
                     <button
                         type="submit"
