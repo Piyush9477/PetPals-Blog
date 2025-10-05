@@ -8,7 +8,9 @@ const userSchema = mongoose.Schema({
     profilePic: String,
     verificationCode: String,
     forgotPasswordCode: String,
-    isVerified: {type: Boolean, default: false}
+    isVerified: {type: Boolean, default: false},
+    likedPosts: [{type: mongoose.Types.ObjectId, ref: "post"}],
+    commentedPosts: [{type: mongoose.Types.ObjectId, ref: "post"}]
 }, {timestamps: true});
 
 const User = mongoose.model("user", userSchema);

@@ -1,4 +1,6 @@
 const Post = require("../models/Post");
+const Comment = require("../models/Comment");
+const User = require("../models/User");
 const {s3, awsBucketName} = require("../middlewares/s3Upload");
 const {DeleteObjectCommand} = require("@aws-sdk/client-s3");
 
@@ -56,11 +58,27 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
     try{
         const {id} = req.params;
+        const {_id: userId} = req.user;
 
         const post = await Post.findById(id);
         if(!post){
             return res.status(404).json({message: "Post not found"});
         }
+
+        if(!post.createdBy.equals(userId)){
+            return res.status(403).json({message: "You do not have permission to delete this post."});
+        }
+
+        const comments = await Comment.find({ post: id });
+        const commentIds = comments.map(c => c._id);
+        const userIds = comments.map(c => c.user); 
+
+        await Comment.deleteMany({ _id: { $in: commentIds } });
+
+        await User.updateMany(
+            { _id: { $in: userIds } },
+            { $pull: { commentedPosts: id } }
+        );
 
         if(post.file){
             const fileKey = post.file.split("/").pop();
@@ -153,4 +171,64 @@ const getAllPosts = async (req, res) => {
     }
 }
 
-module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts};
+const addComment = async (req, res) => {
+    try{
+        const {content} = req.body;
+        const {id: postId} = req.params;
+        const {_id: userId} = req.user;
+        
+        if(!content || !postId){
+            return res.status(400).json({message: "Both content and postId are required"});
+        }
+        
+        const post = await Post.findById(postId);
+        if(!post){
+            return res.status(404).json({message: "Post not found"});
+        }
+
+        const loggedInUser = await User.findById(userId);
+        if(!loggedInUser){
+            return res.status(404).json({message: "User not found"});
+        }
+
+        const newComment = new Comment({post: postId, user: userId, content});
+        await newComment.save();
+
+        loggedInUser.commentedPosts.push(postId);
+        await loggedInUser.save();
+
+        post.comments.push(newComment._id);
+        await post.save();
+
+        res.status(201).json({message: "Comment created successfully", comment: newComment});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+const deleteComment = async (req, res) => {
+    try{
+        const {id: commentId} = req.params;
+        const {_id: userId} = req.user;
+        
+        const comment = await Comment.findById(commentId);
+        if(!comment){
+            return res.status(404).json({message: "Comment not found"});
+        }
+        
+        if(!comment.user.equals(userId)){
+            return res.status(403).json({message: "You do not have permission to delete this comment."});
+        }
+
+        const postId = comment.post;
+        await Comment.findByIdAndDelete(commentId);
+        await User.findByIdAndUpdate(userId, {$pull: {commentedPosts: postId}});
+        await Post.findByIdAndUpdate(postId, {$pull: {comments: commentId}});
+
+        res.status(200).json({ message: "Comment deleted successfully" });
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment};
