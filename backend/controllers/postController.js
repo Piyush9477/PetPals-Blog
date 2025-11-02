@@ -273,4 +273,77 @@ const getMyComments = async (req, res) => {
     }
 }
 
-module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments};
+const likeOrUnlikePost = async (req, res) => {
+    try{
+        const {id: postId} = req.params;
+        const {_id: userId} = req.user;
+
+        const post = await Post.findById(postId);
+        const user = await User.findById(userId);
+
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        if(post.likes.includes(userId)){
+            post.likes.pull(userId);
+            user.likedPosts.pull(postId);
+        }else{
+            post.likes.push(userId);
+            user.likedPosts.push(postId);
+        }
+
+        await post.save();
+        await user.save();
+
+        res.status(200).json({
+            message: "Like status updated",
+            likesCount: post.likes.length,
+            liked: post.likes.includes(userId)
+        });
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+const getLikes = async (req, res) => {
+    try{
+        const {id: postId} = req.params;
+        
+        const post = await Post.findById(postId).populate("likes", "name profilePic");
+
+        if(!post){
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        const likedUsers = post.likes.map(user => ({
+            id: user._id,
+            name: user.name,
+            profilePic: user.profilePic || null
+        }));
+
+        res.status(200).json({post: post.title, totalLikes: likedUsers.length, likes: likedUsers});
+    }
+    catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+const getMyLikes = async (req, res) => {
+    try{
+        const {_id: userId} = req.user;
+
+        const user = await User.findById(userId).populate("likedPosts", "title");
+
+        const likedPosts = user.likedPosts.map(post => ({
+            post: post.title
+        }));
+
+        res.status(200).json({totalLikedPosts: likedPosts.length, likedPosts: likedPosts});
+    }
+    catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments, likeOrUnlikePost, getLikes, getMyLikes};
