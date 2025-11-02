@@ -231,4 +231,46 @@ const deleteComment = async (req, res) => {
     }
 }
 
-module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment};
+const getComment = async (req, res) => {
+    try{
+        const {id} = req.params;
+        
+        const comment = await Comment.findById(id).populate("user", "name").populate("post", "title");
+        if(!comment){
+            return res.status(404).json({message:"Comment not found"});
+        }
+
+        res.status(200).json({message: "Got comment successfully", comment:{
+            postTitle: comment.post.title,
+            comment: comment.content,
+            createdBy: comment.user.name,
+            createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+        }});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+const getMyComments = async (req, res) => {
+    try{
+        const {_id} = req.user;
+
+        const comments = await Comment.find({user: _id}).populate("user", "name").populate("post", "title");
+        if(!comments || comments.length==0){
+            return res.status(404).json({message: "You have not commented on any posts yet"});
+        }
+
+        const formattedComments = comments.map(comment => ({
+            postTitle: comment.post.title,
+            comment: comment.content,
+            createdBy: comment.user.name,
+            createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+        }));
+
+        res.status(200).json({message: "Got your comments successfully", comments: formattedComments});
+    }catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments};
