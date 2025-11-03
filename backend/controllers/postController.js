@@ -71,13 +71,20 @@ const deletePost = async (req, res) => {
 
         const comments = await Comment.find({ post: id });
         const commentIds = comments.map(c => c._id);
-        const userIds = comments.map(c => c.user); 
+        const commentedUserIds = comments.map(c => c.user); 
 
         await Comment.deleteMany({ _id: { $in: commentIds } });
 
         await User.updateMany(
-            { _id: { $in: userIds } },
+            { _id: { $in: commentedUserIds } },
             { $pull: { commentedPosts: id } }
+        );
+
+        const likedUserIds = post.likes;
+
+        await User.updateMany(
+            { _id: { $in: likedUserIds } },
+            { $pull: { likedPosts: id } }
         );
 
         if(post.file){
