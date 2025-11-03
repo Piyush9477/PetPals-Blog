@@ -101,10 +101,22 @@ const getPost = async (req, res) => {
     try{
         const {id} = req.params;
 
-        const post = await Post.findById(id).populate("createdBy", "name");
+        const post = await Post.findById(id).populate("createdBy", "name").populate("likes", "name");
         if(!post){
             return res.status(404).json({message: "Post not found"});
         }
+
+        const comments = await Comment.find({post: id}).populate("user", "name");
+        const formattedComments = comments.map(comment => ({
+            comment: comment.content,
+            createdBy: comment.user.name,
+            createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+        }));
+
+        const likedUsers = post.likes.map(user => ({
+            id: user._id,
+            name: user.name,
+        }));
 
         res.status(200).json({message: "Got post successfully", post: {
             title: post.title,
@@ -113,6 +125,14 @@ const getPost = async (req, res) => {
             createdBy: post.createdBy.name,
             createdAt: new Date(post.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
             updatedAt: new Date(post.updatedAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            comments: {
+                count: post.comments.length,
+                list: formattedComments
+            },
+            likes:{
+                count: post.likes.length,
+                likedBy: likedUsers
+            }
         }});
     }catch(error){
         return res.status(500).json({message: "Server Error", error: error.message});
@@ -122,23 +142,50 @@ const getPost = async (req, res) => {
 const getMyPosts = async (req, res) => {
     try {
         const {_id} = req.user;
-        const posts = await Post.find({createdBy: _id}).populate("createdBy", "name profilePic");
+        const posts = await Post.find({createdBy: _id})
+            .populate("createdBy", "name profilePic")
+            .populate("likes", "name")
+            .populate({
+                path: "comments",
+                populate: {path: "user", select: "name"},
+            });
         if(!posts || posts.length==0){
             return res.status(404).json({message: "You have not created any posts yet."});
         }
         
-        const formattedPosts = posts.map(post => ({
-            id: post._id,
-            title: post.title,
-            description: post.desc,
-            file: post.file,
-            createdBy: {
-                name: post.createdBy.name,
-                profilePic: post.createdBy.profilePic
-            },
-            createdAt: post.createdAt,
-            updatedAt: post.updatedAt,
-        }));
+        const formattedPosts = posts.map((post) => {
+            const formattedComments = post.comments.map(comment => ({
+                comment: comment.content,
+                createdBy: comment.user.name,
+                createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            }));
+
+            const likedUsers = post.likes.map(user => ({
+                id: user._id,
+                name: user.name,
+            }));
+
+            return {
+                id: post._id,
+                title: post.title,
+                description: post.desc,
+                file: post.file,
+                createdBy: {
+                    name: post.createdBy.name,
+                    profilePic: post.createdBy.profilePic
+                },
+                createdAt: post.createdAt,
+                updatedAt: post.updatedAt,
+                comments: {
+                    count: post.comments.length,
+                    list: formattedComments,
+                },
+                likes: {
+                    count: post.likes.length,
+                    likedBy: likedUsers,
+                },
+            };
+        });
 
         res.status(200).json({message: "Got your posts successfully", posts: formattedPosts});
     }catch(error){
@@ -148,22 +195,50 @@ const getMyPosts = async (req, res) => {
 
 const getAllPosts = async (req, res) => {
     try{
-        const posts = await Post.find().populate("createdBy", "name profilePic");
+        const posts = await Post.find()
+            .populate("createdBy", "name profilePic")
+            .populate("likes", "name")
+            .populate({
+                path: "comments",
+                populate: {path: "user", select: "name"},
+            });
         if(!posts || posts.length==0){
             return res.status(404).json({message: "Post not found"});
         }
         
-        const formattedPosts = posts.map(post => ({
-            title: post.title,
-            description: post.desc,
-            file: post.file,
-            createdBy: {
-                name: post.createdBy.name,
-                profilePic: post.createdBy.profilePic
-            },
-            createdAt: post.createdAt,
-            updatedAt: post.updatedAt,
-        }));
+        const formattedPosts = posts.map((post) => {
+            const formattedComments = post.comments.map(comment => ({
+                comment: comment.content,
+                createdBy: comment.user.name,
+                createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
+            }));
+
+            const likedUsers = post.likes.map(user => ({
+                id: user._id,
+                name: user.name,
+            }));
+
+            return {
+                id: post._id,
+                title: post.title,
+                description: post.desc,
+                file: post.file,
+                createdBy: {
+                    name: post.createdBy.name,
+                    profilePic: post.createdBy.profilePic
+                },
+                createdAt: post.createdAt,
+                updatedAt: post.updatedAt,
+                comments: {
+                    count: post.comments.length,
+                    list: formattedComments,
+                },
+                likes: {
+                    count: post.likes.length,
+                    likedBy: likedUsers,
+                },
+            };
+        });
 
         res.status(200).json({message: "Got all posts successfully", posts: formattedPosts});
     }catch(error){
