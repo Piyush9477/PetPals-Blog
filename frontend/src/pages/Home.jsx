@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { allPosts } from "../api/postsApi"
+import { allPosts } from "../api/postsApi";
+import { BiSolidLike  } from "react-icons/bi";
 
 const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  const [liked, setLiked] = useState(false);
+
+  const handleLike = () => {
+    setLiked(!liked);
+  }
 
   useEffect(() => {
     const fetchallPosts = async () => {
@@ -44,12 +51,33 @@ const Home = () => {
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post, idx) => (
-            <article key={idx} className="flex flex-col rounded-lg border border-gray-200 bg-white shadow-sm">
+            <article key={idx} className="flex flex-col rounded-lg border border-gray-100 bg-white shadow-sm">
+
+              <div className="mt-0.5 flex items-center space-x-4">
+                {post.author.avatar ? (
+                  <img
+                    className="h-10 w-10 rounded-full object-cover"
+                    src={post.author.avatar}
+                    alt={`${post.author.name} avatar`}
+                    loading="lazy"
+                  />
+                ) : (
+                  <img
+                    className="h-10 w-10 rounded-full object-cover"
+                    src="no-profile-logo.png"
+                    loading="lazy"
+                  />
+                )}
+                <div className="text-sm">
+                  <p className="font-semibold text-gray-900">{post.author.name}</p>
+                </div>
+              </div>
+
               {post.file ? (
                 <img
                   src={post.file}
                   alt={post.title}
-                  className="w-full h-48 object-cover rounded-t-lg cursor-pointer hover:opacity-90 transition"
+                  className="w-full h-50 object-cover cursor-pointer hover:opacity-90 transition"
                   loading="lazy"
                   onClick={() => setSelectedImage(post.file)}
                 />
@@ -68,27 +96,22 @@ const Home = () => {
                 <p className="mt-2 text-gray-600 text-sm flex-grow max-h-24 overflow-y-auto pr-2 custom-scrollbar">
                   {post.description}
                 </p>
-
-                <div className="mt-6 flex items-center space-x-4">
-                  {post.author.avatar ? (
-                    <img
-                      className="h-10 w-10 rounded-full object-cover"
-                      src={post.author.avatar}
-                      alt={`${post.author.name} avatar`}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <img
-                      className="h-10 w-10 rounded-full object-cover"
-                      src="no-profile-logo.png"
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="text-sm">
-                    <p className="font-semibold text-gray-900">{post.author.name}</p>
-                  </div>
-                </div>
               </div>
+
+              {/* <div className="mt-1 flex items-center space-x-4">
+                <button
+                  onClick={handleLike}
+                  className={`transition-transform duration-300 ease-out ${
+                    liked ? "scale-125" : "scale-100"
+                  }`}
+                >
+                  <BiSolidLike  
+                    className={`text-2xl transition-colors duration-300 ${
+                      liked ? "text-blue-500" : "text-gray-400"
+                    }`}
+                  />
+                </button>
+              </div> */}
             </article>
           ))}
         </div>
