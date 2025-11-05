@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { allPosts } from "../api/postsApi";
-import { BiSolidLike  } from "react-icons/bi";
+import LikeButton from "../components/LikeButton";
 
 const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const [liked, setLiked] = useState(false);
-
-  const handleLike = () => {
-    setLiked(!liked);
-  }
 
   useEffect(() => {
     const fetchallPosts = async () => {
@@ -98,20 +92,9 @@ const Home = () => {
                 </p>
               </div>
 
-              {/* <div className="mt-1 flex items-center space-x-4">
-                <button
-                  onClick={handleLike}
-                  className={`transition-transform duration-300 ease-out ${
-                    liked ? "scale-125" : "scale-100"
-                  }`}
-                >
-                  <BiSolidLike  
-                    className={`text-2xl transition-colors duration-300 ${
-                      liked ? "text-blue-500" : "text-gray-400"
-                    }`}
-                  />
-                </button>
-              </div> */}
+              <div className="mt-1 flex items-center space-x-4">
+                <LikeButton/>
+              </div>
             </article>
           ))}
         </div>
