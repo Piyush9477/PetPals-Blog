@@ -428,4 +428,24 @@ const getMyLikes = async (req, res) => {
     }
 }
 
-module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments, likeOrUnlikePost, getLikes, getMyLikes};
+const getLikeStatusForSinglePost = async (req, res) => {
+    try{
+        const {_id: userId} = req.user;
+        const {id: postId} = req.params;
+
+        const post = await Post.findById(postId);
+        
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+
+        const isLiked = post.likes.includes(userId);
+
+        res.status(200).json({LikeStatus: isLiked});
+    }
+    catch(error){
+        return res.status(500).json({message: "Server Error", error: error.message});
+    }
+}
+
+module.exports = {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments, likeOrUnlikePost, getLikes, getMyLikes, getLikeStatusForSinglePost};

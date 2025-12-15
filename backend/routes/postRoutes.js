@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
-const {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments, likeOrUnlikePost, getLikes, getMyLikes} = require("../controllers/postController");
+const {addPost, updatePost, deletePost, getPost, getAllPosts, getMyPosts, addComment, deleteComment, getComment, getMyComments, likeOrUnlikePost, getLikes, getMyLikes, getLikeStatusForSinglePost} = require("../controllers/postController");
 const {upload} = require("../middlewares/s3Upload");
 
 router.post("/add", authMiddleware, upload.single("file"), addPost); // add post
@@ -17,5 +17,6 @@ router.get("/get-my-comments", authMiddleware, getMyComments); // get user comme
 router.put("/like/:id", authMiddleware, likeOrUnlikePost); // like or unlike a post
 router.get("/get-likes/:id", authMiddleware, getLikes); // get likes for a single post
 router.get("/get-my-likes", authMiddleware, getMyLikes); // get user liked posts
+router.get("/get-like-status-for-single-post/:id", authMiddleware, getLikeStatusForSinglePost); // get like status for a single post
 
 module.exports = router;
