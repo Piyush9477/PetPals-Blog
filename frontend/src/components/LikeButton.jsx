@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { BiSolidLike  } from "react-icons/bi";
 import { likeOrUnlikePost } from "../api/postsApi";
-import { useEffect } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { notifyAndRedirect } from "../utils/notifyAndRedirect";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LikeButton = ({postId, isInitiallyLiked}) => {
     const [liked, setLiked] = useState(false);
     const [likingAnimating, setLikingAnimating] = useState(false);
+
+    const {isLoggedIn} = useContext(AuthContext);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         setLiked(isInitiallyLiked);
     }, [isInitiallyLiked]);
 
     const handleLike = async () => {
+        if(!isLoggedIn){
+            toast.error("You must be logged in to like posts!");
+            return;
+        }
+
         setLikingAnimating(true);
         setLiked(!liked);
 
