@@ -418,6 +418,7 @@ const getMyLikes = async (req, res) => {
         const user = await User.findById(userId).populate("likedPosts", "title");
 
         const likedPosts = user.likedPosts.map(post => ({
+            id: post.id,
             post: post.title
         }));
 

@@ -32,7 +32,7 @@ export const allPosts = async () => {
 
 // add comment
 export const addComment = async (data, id) => {
-    return await APT.post(`post/add-comment/${id}`, data);
+    return await APT.post(`/post/add-comment/${id}`, data);
 }
 
 // delete comment
@@ -57,10 +57,10 @@ export const likeOrUnlikePost = async (id) => {
 
 // get likes for a single post
 export const getLikes = async (id) => {
-    return API.get(`/get-likes/${id}`);
+    return API.get(`/post/get-likes/${id}`);
 }
 
 // get user liked posts
 export const getMyLikes = async () => {
-    return API.get(`/get-my-likes`);
+    return API.get(`/post/get-my-likes`);
 }

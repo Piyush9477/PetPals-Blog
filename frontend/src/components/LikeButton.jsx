@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { BiSolidLike  } from "react-icons/bi";
 import { likeOrUnlikePost } from "../api/postsApi";
+import { useEffect } from "react";
 
-const LikeButton = () => {
+const LikeButton = ({postId, isInitiallyLiked}) => {
     const [liked, setLiked] = useState(false);
     const [likingAnimating, setLikingAnimating] = useState(false);
 
-    const id = "";
+    useEffect(() => {
+        setLiked(isInitiallyLiked);
+    }, [isInitiallyLiked]);
 
     const handleLike = async () => {
-        await likeOrUnlikePost(id);
         setLikingAnimating(true);
         setLiked(!liked);
 
@@ -18,7 +20,6 @@ const LikeButton = () => {
 
     return(
         <button
-            
             onClick={handleLike}
             className="!bg-transparent !border-none !outline-none !ring-0 transition-transform duration-300 ease-out"
         >

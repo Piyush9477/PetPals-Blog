@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { allPosts } from "../api/postsApi";
+import React, { useEffect, useState, useContext } from "react";
+import { allPosts, getMyLikes } from "../api/postsApi";
 import LikeButton from "../components/LikeButton";
+import { AuthContext } from "../contexts/AuthContext";
 
 const Home = () => {
 
   const [posts, setPosts] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [likedPostIds, setLikedPostIds] = useState(new Set());
+
+  const { isLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
-    const fetchallPosts = async () => {
+    const fetchPageData = async () => {
       try {
-        const response = await allPosts();
+        const postsRes = await allPosts();
 
-        const formattedPosts = response.data.posts.map(post => ({
+        const formattedPosts = postsRes.data.posts.map(post => ({
+          id: post.id,
           title: post.title,
           description: post.description,
           file: post.file,
@@ -25,13 +30,23 @@ const Home = () => {
         }));
 
         setPosts(formattedPosts);
+
+        if(isLoggedIn){
+          const likesRes = await getMyLikes();
+          const ids = likesRes.data.likedPosts.map(item => item.id);
+
+          setLikedPostIds(new Set(ids));
+        }
+        else{
+          setLikedPostIds(new Set());
+        }
       } catch (error) {
         console.error('Error fetching posts:', error.message);
       }
     };
 
-    fetchallPosts();
-  }, []);
+    fetchPageData();
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -93,7 +108,10 @@ const Home = () => {
               </div>
 
               <div className="mt-1 flex items-center space-x-4">
-                <LikeButton/>
+                <LikeButton
+                    postId = {post.id}
+                    isInitiallyLiked = {likedPostIds.has(post.id)}
+                />
               </div>
             </article>
           ))}
