@@ -27,6 +27,7 @@ const Home = () => {
           },
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
+          likesCount: post.likes.count,
         }));
 
         setPosts(formattedPosts);
@@ -111,6 +112,7 @@ const Home = () => {
                 <LikeButton
                     postId = {post.id}
                     isInitiallyLiked = {likedPostIds.has(post.id)}
+                    initialLikesCount={post.likesCount || 0}
                 />
               </div>
             </article>
