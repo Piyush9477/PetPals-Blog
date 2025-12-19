@@ -47,7 +47,7 @@ const LikeButton = ({postId, isInitiallyLiked, initialLikesCount}) => {
                 className="!bg-transparent !border-none !outline-none !ring-0 transition-transform duration-300 ease-out"
             >
                 <BiSolidLike
-                    className={`text-2xl transition-colors duration-300 ${liked ? "text-blue-500" : "text-gray-400"
+                    className={`text-2xl transition-colors duration-300 ${liked ? "text-blue-500" : "text-gray-400 hover:text-gray-500 transition-colors"
                         } ${likingAnimating ? "scale-125" : "scale-100"}`}
                 />
             </button>

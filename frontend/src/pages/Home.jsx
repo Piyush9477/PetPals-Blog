@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { allPosts, getMyLikes } from "../api/postsApi";
 import LikeButton from "../components/LikeButton";
+import CommentButton from "../components/CommentButton";
 import { AuthContext } from "../contexts/AuthContext";
 
 const Home = () => {
@@ -28,6 +29,7 @@ const Home = () => {
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
           likesCount: post.likes.count,
+          commentsCount: post.comments.count,
         }));
 
         setPosts(formattedPosts);
@@ -108,11 +110,14 @@ const Home = () => {
                 </p>
               </div>
 
-              <div className="mt-1 flex items-center space-x-4">
+              <div className="mt-1 flex items-center space-x-5">
                 <LikeButton
-                    postId = {post.id}
-                    isInitiallyLiked = {likedPostIds.has(post.id)}
-                    initialLikesCount={post.likesCount || 0}
+                  postId = {post.id}
+                  isInitiallyLiked = {likedPostIds.has(post.id)}
+                  initialLikesCount={post.likesCount || 0}
+                />
+                <CommentButton 
+                  initialCommentsCount = {post.commentsCount || 0}
                 />
               </div>
             </article>
