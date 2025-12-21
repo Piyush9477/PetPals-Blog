@@ -30,6 +30,7 @@ const Home = () => {
           updatedAt: post.updatedAt,
           likesCount: post.likes.count,
           commentsCount: post.comments.count,
+          commentsList: post.comments.list,
         }));
 
         setPosts(formattedPosts);
@@ -117,7 +118,9 @@ const Home = () => {
                   initialLikesCount={post.likesCount || 0}
                 />
                 <CommentButton 
+                  postId = {post.id}
                   initialCommentsCount = {post.commentsCount || 0}
+                  initialComments = {post.commentsList}
                 />
               </div>
             </article>
