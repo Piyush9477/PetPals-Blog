@@ -32,7 +32,7 @@ export const allPosts = async () => {
 
 // add comment
 export const addComment = async (data, id) => {
-    return await APT.post(`/post/add-comment/${id}`, data);
+    return await API.post(`/post/add-comment/${id}`, data);
 }
 
 // delete comment
