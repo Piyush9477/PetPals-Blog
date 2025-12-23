@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
-import {BiSolidComment, BiX} from "react-icons/bi";
-import { addComment } from "../api/postsApi";
+import {BiSolidComment, BiTrash, BiX} from "react-icons/bi";
+import { addComment, deleteComment } from "../api/postsApi";
 import { AuthContext } from "../contexts/AuthContext";
 import { toast } from "react-toastify";
 
@@ -10,7 +10,7 @@ const CommentButton = ({postId, initialCommentsCount, initialComments}) => {
     const [comments, setComments] = useState(initialComments || []);
     const [newComment, setNewComment] = useState("");
 
-    const {isLoggedIn} = useContext(AuthContext);
+    const {isLoggedIn, user} = useContext(AuthContext);
 
     useEffect(() => {
         setComments(initialComments);
@@ -36,6 +36,22 @@ const CommentButton = ({postId, initialCommentsCount, initialComments}) => {
         catch(error) {
             console.log(error);
             toast.error("Failed to add comment");
+        }
+    }
+
+    const handleDeleteComment = async (commentId) => {
+        if(!window.confirm("Are you sure you want to delete this comment?")) return;
+
+        try{
+            await deleteComment(commentId);
+
+            setComments(comments.filter(c => c.id !== commentId));
+            setCount(prev => prev-1);
+            toast.success("Comment deleted");
+        }
+        catch(error){
+            console.log(error);
+            toast.error("Failed to delete comment");
         }
     }
 
@@ -68,14 +84,27 @@ const CommentButton = ({postId, initialCommentsCount, initialComments}) => {
                         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
                             {comments && comments.length > 0 ? (
                                 comments.map((c, index) => (
-                                    <div key={index} className="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                                    <div key={c.id || index} className="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
                                         <div className="flex justify-between items-center mb-1">
-                                            <span className="text-xs font-bold text-blue-600">
-                                                {c.createdBy}
-                                            </span>
-                                            <span className="text-[10px] text-gray-400">
-                                                {c.createdAt}
-                                            </span>
+                                            <div className="flex flex-col">
+                                                <span className="text-xs font-bold text-blue-600">
+                                                    {c.createdBy}
+                                                </span>
+                                                <span className="text-[10px] text-gray-400">
+                                                    {c.createdAt}
+                                                </span>
+                                            </div>
+
+                                            {isLoggedIn && (user?._id === c.user || user?.name === c.createdBy) && (
+                                                <button
+                                                    onClick={() => handleDeleteComment(c.id)}
+                                                    className="text-gray-300 hover:text-red-500 transition-colors p-1"
+                                                    title="Delete comment"
+                                                >
+                                                    <BiTrash size={16} />
+                                                </button>
+                                            )}
+
                                         </div>
                                         <p className="text-sm text-gray-700">{c.comment}</p>
                                     </div>

@@ -215,6 +215,7 @@ const getAllPosts = async (req, res) => {
         
         const formattedPosts = posts.map((post) => {
             const formattedComments = post.comments.map(comment => ({
+                id: comment._id,
                 comment: comment.content,
                 createdBy: comment.user.name,
                 createdAt: new Date(comment.createdAt).toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }),
